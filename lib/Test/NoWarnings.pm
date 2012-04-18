@@ -104,6 +104,7 @@ sub had_no_warnings {
 		}
 	}
 
+	$do_end_test = 0;
 	$TEST->ok($ok, $name) || $TEST->diag($diag);
 
 	return $ok;
