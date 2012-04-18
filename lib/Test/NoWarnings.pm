@@ -35,6 +35,20 @@ sub import {
 		@_ = grep { $_ ne ':early' } @_;
 		$EARLY = 1;
 	}
+
+    # Monkey-patch the callers done_testing() to call had_no_warnings() first
+    {
+	    my $caller_func = caller() . '::done_testing';
+	    no strict 'refs';
+	    if (my $done_testing = *{ $caller_func }{CODE}) {
+		    no warnings 'redefine';
+		    *{ $caller_func } = sub {
+			    had_no_warnings();
+		        $do_end_test = 0;
+			    $done_testing->(@_);
+		    };
+	    }
+    }
 	goto &Exporter::import;
 }
 
