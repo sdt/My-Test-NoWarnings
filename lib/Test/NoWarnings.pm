@@ -35,6 +35,10 @@ sub import {
 		@_ = grep { $_ ne ':early' } @_;
 		$EARLY = 1;
 	}
+	if ( grep { $_ eq ':no_end_test' } @_ ) {
+		@_ = grep { $_ ne ':no_end_test' } @_;
+		$do_end_test = 0;
+	}
 	goto &Exporter::import;
 }
 
