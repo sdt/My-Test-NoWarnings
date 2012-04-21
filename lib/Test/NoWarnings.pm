@@ -30,6 +30,7 @@ my $EARLY    = 0;
 $SIG{__WARN__} = make_catcher(\@WARNINGS);
 
 sub import {
+	$TEST->add_done_testing_callback(\&_had_no_warnings_callback);
 	$do_end_test = 1;
 	if ( grep { $_ eq ':early' } @_ ) {
 		@_ = grep { $_ ne ':early' } @_;
@@ -107,6 +108,11 @@ sub had_no_warnings {
 	$TEST->ok($ok, $name) || $TEST->diag($diag);
 
 	return $ok;
+}
+
+sub _had_no_warnings_callback {
+	$do_end_test = 0;
+	had_no_warnings;
 }
 
 sub clear_warnings {
