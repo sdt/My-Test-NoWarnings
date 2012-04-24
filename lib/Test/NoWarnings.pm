@@ -40,12 +40,12 @@ sub import {
     {
 	    my $caller_func = caller() . '::done_testing';
 	    no strict 'refs';
-	    if (my $done_testing = *{ $caller_func }{CODE}) {
+	    if (my $done_testing = \&{ $caller_func }) {
 		    no warnings 'redefine';
 		    *{ $caller_func } = sub {
 			    had_no_warnings();
 		        $do_end_test = 0;
-			    $done_testing->(@_);
+                goto &$done_testing;
 		    };
 	    }
     }
